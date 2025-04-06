@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome - Plagiarism Detection App</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+    <h1>Welcome to the Plagiarism Detection App!</h1>
+    <p>Please <a href="/auth/login">login</a> or <a href="/auth/register">sign up</a> to continue.</p>
+    <p>For Admins, please <a href="/admin/login">login as admin</a>.</p>
+
+    <div class="sidebar">
+        <div class="gadget">
+            <br>
+            <h2 class="star"><span>Sidebar</span> Menu</h2>
+            <div class="clr"></div>
+            <ul class="sb_menu">
+                <li><a th:href="@{/user/home}">User Home</a></li>
+                <li><a th:href="@{/user/upload}">File Upload</a></li>
+                <li><a th:href="@{/user/view}">File View</a></li>
+                <li><a th:href="@{/user/request}">File Request</a></li>
+                <li><a th:href="@{/auth/register}">Registration</a></li>
+                               
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

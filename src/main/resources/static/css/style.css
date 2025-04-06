@@ -1,0 +1,149 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #E0E0E0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #00BFFF;
+    text-align: center;
+}
+
+/* Links */
+a {
+    color: #00BFFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #FFD700;
+}
+
+/* Form Styling */
+form {
+    background-color: #1E1E1E;
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
+    box-shadow: 0px 4px 10px rgba(0, 191, 255, 0.2);
+    text-align: center;
+}
+
+input, button {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+input {
+    background: #292929;
+    color: #E0E0E0;
+}
+
+button {
+    background-color: #00BFFF;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #FFD700;
+    color: #121212;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 220px;
+    height: 100%;
+    background-color: #1E1E1E;
+    padding: 20px;
+    box-shadow: 2px 0px 10px rgba(0, 191, 255, 0.3);
+}
+
+.sidebar .sb_menu {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar .sb_menu li {
+    padding: 15px;
+    border-bottom: 1px solid #00BFFF;
+}
+
+.sidebar .sb_menu li a {
+    color: #E0E0E0;
+    font-size: 18px;
+    text-decoration: none;
+    display: block;
+}
+
+.sidebar .sb_menu li a:hover {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+/* Tables */
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+th, td {
+    border: 1px solid #00BFFF;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #00BFFF;
+    color: #121212;
+}
+
+td {
+    background-color: #1E1E1E;
+}
+
+/* Buttons in tables */
+td button {
+    background-color: #00BFFF;
+    color: #121212;
+    font-weight: bold;
+}
+
+td button:hover {
+    background-color: #FFD700;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .sb_menu li {
+        text-align: center;
+    }
+
+    form {
+        width: 90%;
+    }
+}

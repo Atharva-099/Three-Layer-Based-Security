@@ -1,0 +1,47 @@
+{"properties": [
+  {
+    "name": "upload.directory",
+    "type": "java.lang.String",
+    "description": "A description for 'upload.directory'"
+  },
+  {
+    "name": "upload.directory",
+    "type": "java.lang.String",
+    "description": "A description for 'upload.directory'"
+  },
+  {
+    "name": "b2.bucketId",
+    "type": "java.lang.String",
+    "description": "A description for 'b2.bucketId'"
+  },
+  {
+    "name": "b2.applicationKey",
+    "type": "java.lang.String",
+    "description": "A description for 'b2.applicationKey'"
+  },
+  {
+    "name": "b2.applicationKeyId",
+    "type": "java.lang.String",
+    "description": "A description for 'b2.applicationKeyId'"
+  },
+  {
+    "name": "b2.applicationKey",
+    "type": "java.lang.String",
+    "description": "A description for 'b2.applicationKey'"
+  },
+  {
+    "name": "b2.bucketId",
+    "type": "java.lang.String",
+    "description": "A description for 'b2.bucketId'"
+  },
+  {
+    "name": "b2.applicationKeyId",
+    "type": "java.lang.String",
+    "description": "A description for 'b2.applicationKeyId'"
+  },
+  {
+    "name": "upload.directory",
+    "type": "java.lang.String",
+    "description": "A description for 'upload.directory'"
+  }
+]}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>File View</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h2 th:text="'Contents of file: ' + ${fileName}">File Content</h2>
+    <pre th:text="${fileContent}">File content will appear here.</pre>
+    <br/>
+    <a href="/user/home">Back to Home</a>
+
+    <div class="sidebar">
+        <div class="gadget">
+            <br>
+            <h2 class="star"><span>Sidebar</span> Menu</h2>
+            <div class="clr"></div>
+            <ul class="sb_menu">
+                <li><a th:href="@{/user/home}">User Home</a></li>
+                <li><a th:href="@{/user/upload}">File Upload</a></li>
+                <li><a th:href="@{/user/view}">File View</a></li>
+                <li><a th:href="@{/user/request}">File Request</a></li>
+                <li><a th:href="@{/auth/register}">Registration</a></li>
+            </ul>
+            
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

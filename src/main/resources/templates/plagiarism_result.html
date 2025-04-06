@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Plagiarism Result</title>
+    <style>
+        /* Basic styles for the pop-up */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        .popup .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .popup .close:hover,
+        .popup .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+<h2 th:if="${isPlagiarized}" th:text="'Plagiarism Detected'">Plagiarism Detected</h2>
+<h2 th:if="${!isPlagiarized}">No Plagiarism Detected</h2>
+<p th:if="${isPlagiarized}" th:text="'Plagiarism detected (' + ${plagiarismPercentage} + '% similarity). File pending admin approval.'">
+    Plagiarism detected (82.61% similarity). File pending admin approval.
+</p>
+<p th:if="${!isPlagiarized}" th:text="'No plagiarism detected (' + ${plagiarismPercentage} + '% similarity). File pending admin approval.'">
+    No plagiarism detected.
+</p>
+
+<!-- Show pop-up only if plagiarism percentage is above threshold -->
+<div id="requestApprovalPopup" class="popup" th:if="${isPlagiarized}">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h3>Request Approval</h3>
+        <form action="/user/message" method="POST">
+            <input type="hidden" name="fileId" th:value="${fileId}">
+            <input type="hidden" name="plagiarismPercentage" th:value="${plagiarismPercentage}">
+            <label for="message">Reason for approval request:</label><br><br>
+            <textarea name="message" rows="4" cols="50" required></textarea><br><br>
+            <button type="submit">Submit Request</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to show the pop-up
+    function showPopup() {
+        document.getElementById("requestApprovalPopup").style.display = "block";
+    }
+
+    // Function to close the pop-up
+    function closePopup() {
+        document.getElementById("requestApprovalPopup").style.display = "none";
+    }
+
+    // Automatically show pop-up if plagiarism is detected
+    window.onload = function() {
+        // Check if the pop-up exists on the page
+        if(document.getElementById("requestApprovalPopup")) {
+            showPopup();
+        }
+    };
+</script>
+
+</body>
+</html>

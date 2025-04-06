@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload File</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+
+</head>
+<body>
+    <h2>Upload a New File</h2>
+    <form action="/user/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <div th:if="${plagiarismDetected}">
+        <p>Plagiarism detected! Choose an option:</p>
+        <form action="/upload/different" method="post">
+            <button type="submit">Upload Different File</button>
+        </form>
+        <form action="/notify-admin" method="post">
+            <button type="submit">Notify Admin</button>
+        </form>
+    </div>
+
+    <div th:if="${uploadSuccess}">
+        <p>File uploaded successfully! Your MAC key: <span th:text="${macKey}"></span></p>
+    </div>
+
+    <a href="/user/home">Go to Home</a>
+
+    <div class="sidebar">
+        <div class="gadget">
+            <br>
+            <h2 class="star"><span>Sidebar</span> Menu</h2>
+            <div class="clr"></div>
+            <ul class="sb_menu">
+                <li><a th:href="@{/user/home}">User Home</a></li>
+                <li><a th:href="@{/user/upload}">File Upload</a></li>
+                <li><a th:href="@{/user/view}">File View</a></li>
+                <li><a th:href="@{/user/request}">File Request</a></li>
+                <li><a th:href="@{/auth/register}">Registration</a></li>
+            </ul>            
+        </div>
+    </div>
+</body>
+</html>

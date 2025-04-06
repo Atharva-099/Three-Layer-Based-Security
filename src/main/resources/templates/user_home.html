@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Home</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+    <h2>Welcome, <span th:text="${username}"></span>!</h2>
+
+    <h3>Please Upload your file</h3>
+    <ul>
+        <li th:each="file : ${pendingFiles}">
+            <span th:text="${file.fileName}"></span> - Status: Pending Admin Approval
+        </li>
+    </ul>
+    
+    <h3>Admin Approved Files:</h3>
+    <ul>
+        <li th:each="file : ${approvedFiles}">
+            <span th:text="${file.fileName}"></span>
+            <!-- Form to enter MAC key to view the file -->
+            <form action="/user/viewFile" method="post" style="display:inline;">
+                <input type="hidden" name="fileId" th:value="${file.fileName}" />
+                <input type="text" name="macKey" placeholder="Enter MAC key" required />
+                <button type="submit">View File</button>
+            </form>
+        </li>
+    </ul>
+
+    <a href="/user/upload">Upload New File</a>
+    <br>
+    <a href="https://secure.backblaze.com/user_signin.htm" target="_blank">Go to Cloud Account to Upload as Backup</a>
+    <br>
+    <a href="/logout">Logout</a>
+
+    <div class="sidebar">
+        <div class="gadget">
+            <br>
+            <h2 class="star"><span>Sidebar</span> Menu</h2>
+            <div class="clr"></div>
+            <ul class="sb_menu">
+                <li><a th:href="@{/user/home}">User Home</a></li>
+                <li><a th:href="@{/user/upload}">File Upload</a></li>
+                <li><a th:href="@{/user/view}">File View</a></li>
+                <li><a th:href="@{/user/request}">File Request</a></li>
+                <li><a th:href="@{/auth/register}">Registration</a></li>
+            </ul>            
+        </div>
+    </div>
+</body>
+</html>

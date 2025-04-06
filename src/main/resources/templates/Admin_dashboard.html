@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+        
+</head>
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+
+
+<body>
+    <h2>Admin Dashboard</h2>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Plagiarism Similarity (%)</th>
+                <th>User Reason</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="fileName : ${files}">
+                <td th:text="${fileName}"></td>
+                <td th:text="${fileDetails[fileName.trim()] != null ? fileDetails[fileName.trim()].getPlagiarismPercentage() : 'N/A'}"></td>
+                <td th:text="${fileDetails[fileName.trim()] != null ? fileDetails[fileName.trim()].getTemporaryUserMessage() : 'N/A'}"></td>
+                <td>
+                    <!-- Approve and Reject forms (existing implementation) -->
+                    <form th:action="@{'/admin/review/approve/' + ${fileName}}" method="post" style="display:inline;">
+                        <!-- Assume admin enters username associated with the file -->
+                        <input type="text" name="username" placeholder="Enter username" required />
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form th:action="@{'/admin/review/reject/' + ${fileName}}" method="post" style="display:inline;">
+                        <button type="submit">Reject</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <a href="/admin/login">Logout</a>
+</body>
+<div class="sidebar">
+    <div class="gadget">
+        <br>
+        <h2 class="star"><span>Sidebar</span> Menu</h2>
+        <div class="clr"></div>
+        <ul class="sb_menu">
+            <li><a th:href="@{/home}">File Upload</a></li>
+            <li><a th:href="@{/user/upload}">User Home</a></li>
+            <li><a th:href="@{/view-files}">File View</a></li>
+            <li><a th:href="@{/request-file}">File Request</a></li>
+            <li><a th:href="@{/auth/register}">Registration</a></li>
+                        
+        </ul>
+    </div>
+</div>
+</html>

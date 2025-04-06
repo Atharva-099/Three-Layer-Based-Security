@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download File</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+    <h2>Download File</h2>
+    <p>Click the link below to download your file:</p>
+    <a th:href="${fileDownloadLink}" download>Download Your File</a>
+    <br><br>
+    <a href="/user/home">Go Back</a>
+
+    <div class="sidebar">
+        <div class="gadget">
+            <br>
+            <h2 class="star"><span>Sidebar</span> Menu</h2>
+            <div class="clr"></div>
+            <ul class="sb_menu">
+                <li><a th:href="@{/user/home}">User Home</a></li>
+                <li><a th:href="@{/user/upload}">File Upload</a></li>
+                <li><a th:href="@{/user/view}">File View</a></li>
+                <li><a th:href="@{/user/request}">File Request</a></li>
+                <li><a th:href="@{/auth/register}">Registration</a></li>
+            </ul>
+            
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
