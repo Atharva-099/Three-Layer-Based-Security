@@ -3,7 +3,7 @@ package com.example.demo.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,10 +25,9 @@ import opennlp.tools.tokenize.SimpleTokenizer;
 @Service
 public class PlagiarismDetectionService {
 
-    private static final double THRESHOLD = 0.8; // 80% similarity
+    private static final double THRESHOLD = 0.8; 
     private static final Set<String> STOP_WORDS = Set.of("a", "and", "the", "or", "is", "to", "in", "of", "that", "this");
 
-    // Extracts text based on file type
     public String extractText(MultipartFile file) throws IOException {
         String fileType = file.getContentType();
 
@@ -40,27 +39,22 @@ public class PlagiarismDetectionService {
             case "text/plain" -> {
                 return new String(file.getBytes());
             }
-
             case "application/pdf" -> {
                 return extractTextFromPDF(file);
             }
-
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document" -> {
                 return extractTextFromDocx(file);
             }
-
             default -> throw new IOException("Unsupported file format.");
         }
     }
 
-    // Extract text from PDF
     private String extractTextFromPDF(MultipartFile file) throws IOException {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             return new PDFTextStripper().getText(document);
         }
     }
 
-    // Extract text from DOCX
     private String extractTextFromDocx(MultipartFile file) throws IOException {
         StringBuilder text = new StringBuilder();
         try (XWPFDocument document = new XWPFDocument(file.getInputStream())) {
@@ -71,7 +65,6 @@ public class PlagiarismDetectionService {
         return text.toString().trim();
     }
 
-    // Helper method to extract text from File (for .txt, .pdf, .docx)
     public String extractTextFromFile(File file) throws IOException {
         String name = file.getName().toLowerCase();
         if (name.endsWith(".txt")) {
@@ -93,7 +86,6 @@ public class PlagiarismDetectionService {
         }
     }
 
-    // Tokenize and remove stop words
     private List<String> preprocessText(String text) {
         SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
         return Arrays.stream(tokenizer.tokenize(text.toLowerCase()))
@@ -101,7 +93,6 @@ public class PlagiarismDetectionService {
                      .collect(Collectors.toList());
     }
 
-    // Compute Cosine Similarity
     private double computeCosineSimilarity(List<String> text1, List<String> text2) {
         Set<String> allWords = new HashSet<>(text1);
         allWords.addAll(text2);
@@ -120,13 +111,12 @@ public class PlagiarismDetectionService {
         return (normProduct == 0) ? 0 : (v1.dotProduct(v2) / normProduct);
     }
 
-    // Compare uploaded file with stored files
     public boolean isPlagiarized(MultipartFile file, List<File> storedFiles) throws IOException {
         String uploadedText = extractText(file);
         List<String> uploadedTokens = preprocessText(uploadedText);
 
         for (File storedFile : storedFiles) {
-            String storedText = Files.readString(Paths.get(storedFile.getAbsolutePath()));
+            String storedText = extractTextFromFile(storedFile);
             List<String> storedTokens = preprocessText(storedText);
 
             double similarity = computeCosineSimilarity(uploadedTokens, storedTokens);
@@ -137,7 +127,6 @@ public class PlagiarismDetectionService {
         return false;
     }
 
-    // Compute maximum similarity percentage against all stored files
     public double getMaxSimilarity(MultipartFile file, List<File> storedFiles) throws IOException {
         String uploadedText = extractText(file);
         List<String> uploadedTokens = preprocessText(uploadedText);
@@ -151,5 +140,28 @@ public class PlagiarismDetectionService {
             }
         }
         return maxSimilarity;
+    }
+
+    private String[] splitIntoSentences(String text) {
+        return text.split("(?<=[.!?])\\s+");
+    }
+
+    public List<String> getMatchingSentences(MultipartFile file, List<File> storedFiles) throws IOException {
+        String uploadedText = extractText(file);
+        String[] uploadedSentences = splitIntoSentences(uploadedText);
+        List<String> matches = new ArrayList<>();
+
+        for (File storedFile : storedFiles) {
+            String storedText = extractTextFromFile(storedFile);
+            String[] storedSentences = splitIntoSentences(storedText);
+            for (String uSentence : uploadedSentences) {
+                for (String sSentence : storedSentences) {
+                    if (uSentence.trim().equalsIgnoreCase(sSentence.trim())) {
+                        matches.add(uSentence.trim());
+                    }
+                }
+            }
+        }
+        return matches;
     }
 }

@@ -48,6 +48,7 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, Model model, Principal principal) {
+        // Validate file type
         String fileType = file.getContentType();
         if (!isValidFileType(fileType)) {
             model.addAttribute("error", "Invalid file type. Only .docx, .pdf, and .txt files are allowed.");
@@ -59,20 +60,26 @@ public class FileUploadController {
             return "user_upload";
         }
         try {
+            // Ensure the pending folder exists (e.g., uploads/pending)
             String pendingFolderPath = uploadDirPath + "/pending";
             File pendingFolder = new File(pendingFolderPath);
             if (!pendingFolder.exists()) {
                 pendingFolder.mkdirs();
             }
             
+            // Generate a unique file name (pass file.getOriginalFilename() to the method)
             String pendingFileName = fileStorageService.generateUniqueFileName(file.getOriginalFilename());
+            
+            // Save the file into the pending folder
             File pendingFile = new File(pendingFolder, pendingFileName);
             file.transferTo(pendingFile);
             
+            // Read the stored file’s content and wrap it into a new MultipartFile
             byte[] fileBytes = Files.readAllBytes(pendingFile.toPath());
             MultipartFile storedFileAsMultipart = new MockMultipartFile(
                     file.getName(), pendingFile.getName(), file.getContentType(), fileBytes);
             
+            // Retrieve approved files from the main uploads folder (only files, excluding directories)
             File approvedFolder = new File(uploadDirPath);
             File[] approvedFilesArray = approvedFolder.listFiles(f -> f.isFile());
             
@@ -90,9 +97,11 @@ public class FileUploadController {
                     : Collections.emptyList();
             }
             
+            // Compute maximum similarity percentage using the stored file
             double similarity = plagiarismDetectionService.getMaxSimilarity(storedFileAsMultipart, approvedFiles);
             double percentage = similarity * 100;
             
+            // Create and persist a new FileEntity record
             String uploadedBy = (principal != null) ? principal.getName() : null;
             FileEntity fileEntity = new FileEntity(pendingFileName, pendingFile.getAbsolutePath(), uploadedBy);
             fileEntity.setPlagiarismPercentage(percentage);
@@ -101,6 +110,14 @@ public class FileUploadController {
             model.addAttribute("fileId", pendingFileName);
             model.addAttribute("plagiarismPercentage", String.format("%.2f", percentage));
             model.addAttribute("isPlagiarized", similarity >= 0.8);
+            
+            // If plagiarism is detected, also add the matching sentences to the model.
+            // Define local threshold (since THRESHOLD is private in the service)
+            final double THRESHOLD = 0.8;
+            if (similarity >= THRESHOLD) {
+                List<String> matchingSentences = plagiarismDetectionService.getMatchingSentences(storedFileAsMultipart, approvedFiles);
+                model.addAttribute("matchingSentences", matchingSentences);
+            }
             
             return "plagiarism_result";
         } catch (IOException e) {
@@ -111,8 +128,8 @@ public class FileUploadController {
 
     @PostMapping("/message")
     public String submitUserMessage(@RequestParam("fileId") String fileId,
-                                                    @RequestParam("message") String message,
-                                                    Model model) {
+                                    @RequestParam("message") String message,
+                                    Model model) {
         try {
             boolean updated = fileStorageService.updateUserMessage(fileId, message);
             if (updated) {
@@ -127,6 +144,7 @@ public class FileUploadController {
         }
     }
 
+    // Method to validate file type
     private boolean isValidFileType(String fileType) {
         return fileType != null && switch (fileType) {
             case "application/pdf",
